@@ -1,0 +1,7 @@
+{
+  "name": "astro-restart-while-starting",
+  "private": true,
+  "type": "module",
+  "scripts": { "repro": "node repro.mjs" },
+  "dependencies": { "astro": "7.4.13" }
+}
