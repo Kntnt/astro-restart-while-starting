@@ -11,14 +11,19 @@ node repro.mjs --calm   # leaves it alone, for comparison
 
 `repro.mjs` removes `.astro`, starts `astro dev`, and gives `astro.config.mjs` a new modification
 time every 20 ms until the log says `Restarting`. It then asks for the start page, waits ten
-seconds, asks again, and prints both counts.
+seconds, asks again, and prints both counts. Whether the restart comes before the content is
+first loaded is a race, so it tries up to five times, stops at the first try that shows the
+fault, and exits 1 then.
 
 Seen with Astro 7.4.13 on macOS (arm64), Node 26.13.1, default file watcher:
 
 | | posts at first | ten seconds later |
 |---|---|---|
-| `node repro.mjs` | 0 | 0 |
+| `node repro.mjs`, a try that shows the fault | 0 | 0 |
 | `node repro.mjs --calm` | 1 | 1 |
+
+A single try showed the fault in 23 of 27 runs here. The four misses came while the machine was
+busy with other work.
 
 The log of a run that shows the fault:
 
